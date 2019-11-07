@@ -7,6 +7,11 @@ import ssl
 # This restores the same behavior as before.
 context = ssl._create_unverified_context()
 
+##Defining class to crawl
+'''Below "product-container gives all the datasets including dinner"'''
+dinner_main_holder = "child-navs tab-cnt hide dinner-tab"
+dinner_container_class = 'product-container'
+
 
 def WebScrapyer(url):
     try:
@@ -15,15 +20,18 @@ def WebScrapyer(url):
             return "URL not found"
         else:
             bsObj = BeautifulSoup(html,'html.parser')
-            #dinner-items sydney-cruise-box-left-img   sydney-cruise-left tab-group
-            #soup = bsObj.find_all('div', {'class': 'sydney-cruise-right'})
-            #for links in soup:
-            #    return links.find('a')['href'] 
-
-            for item in bsObj.find_all(class_=["sydney-cruise-right"]):
-                    product_id = item.find(class_='child-navs tab-cnt hide dinner-tab')
-                    description = item.find(class_='cruise-text-box')
-                    print(description)
+            ul  =  bsObj.find('li', class_ = dinner_main_holder)
+            dinner = ul.li
+            for item in dinner:
+                try:
+                        description = item.find(class_='cruise-text-box').text
+                        full_price = item.find(class_="full-price").text
+                        actual_price = item.find(class_='actual').text
+                        child_price = item.find(class_='other-price').text
+                        save_price = item.find(class_='save-price-amount').text
+                        print(description,full_price, actual_price,child_price, save_price)
+                except :
+                        pass
 
 
     except (AttributeError,HTTPError) as err:
