@@ -20,18 +20,39 @@ def WebScrapyer(url):
             return "URL not found"
         else:
             bsObj = BeautifulSoup(html,'html.parser')
-            ul  =  bsObj.find('li', class_ = dinner_main_holder)
-            dinner = ul.li
-            for item in dinner:
+            soup =  bsObj.find('li', class_ = dinner_main_holder)
+            for item in soup.ul.find(class_=dinner_container_class):
                 try:
-                        description = item.find(class_='cruise-text-box').text
-                        full_price = item.find(class_="full-price").text
-                        actual_price = item.find(class_='actual').text
-                        child_price = item.find(class_='other-price').text
-                        save_price = item.find(class_='save-price-amount').text
-                        print(description,full_price, actual_price,child_price, save_price)
-                except :
-                        pass
+                        if item.find(class_='cruise-text-box').p.text == None:
+                            description =  'NA'
+                        else:
+                            description = item.find(class_='cruise-text-box').p.text
+                        try:
+                            if item.find(class_="full-price").text == None:
+                                full_price = 'NA'
+                            else:
+                                full_price = item.find(class_="full-price").text
+                        except:
+                            pass
+                        if item.find(class_='actual').text == None:
+                            actual_price = 'NA'
+                        else:
+                            actual_price = item.find(class_='actual').text
+                        if item.find(class_='other-price').text == None:
+                            other_price = 'NA'
+                        else:
+                            other_price = item.find(class_='other-price').text
+                        try:
+                            if item.find(class_='save-price-amount').text == None:
+                                save_price = 'NA'
+                            else:
+                                save_price = item.find(class_='save-price-amount').text
+                        except:
+                            pass
+                
+                        print(description,full_price, actual_price,other_price, save_price)
+                except:
+                    pass
 
 
     except (AttributeError,HTTPError) as err:
