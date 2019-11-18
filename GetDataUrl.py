@@ -3,6 +3,9 @@ from urllib.request import urlopen
 from urllib.error import HTTPError
 import argparse
 import ssl
+import csv
+from CsvFormatter import CsvWriter
+from CsvFormatter import S3_Uploader
 
 # This restores the same behavior as before.
 context = ssl._create_unverified_context()
@@ -11,6 +14,7 @@ context = ssl._create_unverified_context()
 '''Below "product-container gives all the datasets including dinner"'''
 dinner_main_holder = "child-navs tab-cnt hide dinner-tab"
 dinner_container_class = 'product-container'
+product_id='cruise-dinner'
 
 
 def WebScrapyer(url):
@@ -50,7 +54,7 @@ def WebScrapyer(url):
                         except:
                             pass
                 
-                        print(description,full_price, actual_price,other_price, save_price)
+                        CsvWriter(product_id,description,full_price, actual_price,other_price, save_price)
                 except:
                     pass
 
@@ -65,3 +69,7 @@ if  __name__ == "__main__":
     args = parser.parse_args()
     url = args.U
     print(WebScrapyer(url))
+    print("Upload Scrapped data to s3")
+    S3_Uploader();
+    print("Successfully completed")
+
